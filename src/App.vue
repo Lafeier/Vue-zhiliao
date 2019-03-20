@@ -5,6 +5,7 @@
         <mt-header fixed title="知了学院"></mt-header>
 
         <!-- 中间 路由router-view 区域 -->
+		<router-view></router-view>
 
         <!-- 底部 Tabbar 区域 -->
         <nav class="mui-bar mui-bar-tab">
@@ -26,8 +27,6 @@
 			</router-link>
 		</nav>
 
-        <!-- <h1>这是 App 组件</h1> --> <!-- 这里不需要 -->
-        <h1>123</h1>
     </div>
 </template>
 
