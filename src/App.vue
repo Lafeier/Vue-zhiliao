@@ -5,7 +5,9 @@
         <mt-header fixed title="知了学院"></mt-header>
 
         <!-- 中间 路由router-view 区域 -->
-		<router-view></router-view>
+		<transition mode="out-in">
+			<router-view></router-view>
+		</transition>
 
         <!-- 底部 Tabbar 区域 -->
         <nav class="mui-bar mui-bar-tab">
@@ -37,7 +39,23 @@
 <style lang="scss" scoped>
     .app-container{
         padding-top: 40px;
+		overflow-x: hidden;	// 解决切换组件时页面出现滚动条的问题
     }
+
+	.v-enter{
+		opacity: 0;
+		transform: translateX(100%);
+	}
+	.v-leave-to{	// 为了实现组件切换时，消失页面从左消失，进入页面从右进入，需要将两组类拆开写
+		opacity: 0;
+		transform: translateX(-100%);	// 负值向左走
+		position: absolute;	
+	}
+
+	.v-enter-active,
+	.v-leave-active{
+		transition: all 0.5s ease;
+	}
 </style>
 
 
