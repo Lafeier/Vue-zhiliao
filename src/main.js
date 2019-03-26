@@ -6,10 +6,25 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 
+// 导入格式化时间的插件
+import moment from 'moment';
+// 定义全局过滤器
+Vue.filter('dateFormat', function(dataStr, pattern = 'YYYY-MM-DD HH:MM:SS'){
+    return moment(dataStr).format(pattern);
+});
+
+
 // 2.1 导入vue-resource
 import VueResource from 'vue-resource';
 // 2.2 安装vue-resource
 Vue.use(VueResource);
+
+// 设置请求的根路径（因为依赖于vue-resource，所以一定要放在引入vue-resource的后面）
+// 这里设置了根路径后，在其他组件中来请求数据时，就只需要写后面的api路径即可，防止如果域名如果有变动则要全改请求地址
+// 请求真实数据时的写法
+// Vue.http.options.root = 'http://www.escook.cn:3000';
+
+
 
 
 // 导入MUI的样式

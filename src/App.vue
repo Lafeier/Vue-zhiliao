@@ -39,6 +39,7 @@
 <style lang="scss" scoped>
     .app-container{
         padding-top: 40px;
+		padding-bottom: 50px;
 		overflow-x: hidden;	// 解决切换组件时页面出现滚动条的问题
     }
 
