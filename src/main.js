@@ -24,6 +24,10 @@ Vue.use(VueResource);
 // 请求真实数据时的写法
 // Vue.http.options.root = 'http://www.escook.cn:3000';
 
+// 全局设置post的时候表单中数据格式的组织形式 application/x-www-form-urlencoded
+Vue.http.options.emulateJSON = true;
+
+
 
 
 

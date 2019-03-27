@@ -2,10 +2,10 @@
     <div class="cmt-container">
         <h3>发表评论</h3>
         <hr>
-        <textarea placeholder="请输入你要BB的内容（吐槽最多只能120字）" maxlength="120"></textarea>
+        <textarea placeholder="请输入你要BB的内容（吐槽最多只能120字）" maxlength="120" v-model="msg"></textarea>
 
         <!-- 使用mint-ui的button组件 -->
-        <mt-button type="primary" size="large">发表评论</mt-button>
+        <mt-button type="primary" size="large" @click="postComment">发表评论</mt-button>
 
         <!-- 评论内容列表 -->
         <div class="cmt-list">
@@ -34,7 +34,8 @@ export default {
     data(){
         return {
             pageIndex: 1,    // 默认显示第一页数据
-            comments: []    //定义一个空数组用来装评论数据
+            comments: [],    // 定义一个空数组用来装评论数据
+            msg: ''          // 定义一个空字符串用来装评论输入的内容
         }
     },
     create(){
@@ -57,6 +58,33 @@ export default {
         getMore(){  // 加载更多数据的方法
             this.pageIndex++;   // 让页码加1
             this.getComments(); // 然后重新执行获取评论数据的方法来获取更多评论数据
+        },
+        postComment(){  // 提交评论内容的方法
+            // 校验内容是否为空
+            if (this.msg.trim().length === 0) { // 如果为空
+                return Toast('评论内容不能为空!');    // 弹窗提示，并且用return来阻止代码继续往后执行
+            }
+
+            // 提交评论
+            // 参数1：提交的URL地址
+            // 参数2：提交给服务器的数据对象 { content: this.msg }
+            // 参数3：定义提交的时候，表单中数据的格式 { emulateJSON: true }
+            this.$http.post('api/postcomment/' + this.$route.params.id, { content: this.msg.trim() } ).then(result => {
+                if (result.body.status === 0) {
+                    // 拼接出一个评论对象
+                    var cmt = { 
+                        user_name: '匿名用户', 
+                        add_time: Date.now(), 
+                        content:this.msg.trim() 
+                    };
+                    // 将评论对象追加到comments数组中
+                    this.comments = cmt;
+                    // 将文本域内容清空
+                    this.msg = '';  
+                } else {
+
+                }
+            });
         }
     },
     props: ['id']
