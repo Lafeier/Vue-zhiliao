@@ -78,7 +78,7 @@ export default {
                         content:this.msg.trim() 
                     };
                     // 将评论对象追加到comments数组中
-                    this.comments = cmt;
+                    this.comments.unshift(cmt);
                     // 将文本域内容清空
                     this.msg = '';  
                 } else {
