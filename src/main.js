@@ -37,11 +37,19 @@ import './lib/mui/css/mui.min.css';
 import './lib/mui/css/icons-extra.css';
 
 // 按需导入 Mint-UI 的组件
-import { Header, Swipe, SwipeItem, Button } from 'mint-ui';
-Vue.component(Header.name, Header);
-Vue.component(Swipe.name, Swipe);
-Vue.component(SwipeItem.name, SwipeItem);
-Vue.component(Button.name, Button);
+// import { Header, Swipe, SwipeItem, Button, Lazyload } from 'mint-ui';
+// Vue.component(Header.name, Header);
+// Vue.component(Swipe.name, Swipe);
+// Vue.component(SwipeItem.name, SwipeItem);
+// Vue.component(Button.name, Button);
+// Vue.use(Lazyload);
+import MintUI from 'mint-ui';
+Vue.use(MintUI);
+import 'mint-ui/lib/style.css';
+
+// 导入并安装图片详情页的缩略图组件
+import VuePreview from 'vue-preview';
+Vue.use(VuePreview);
 
 
 // 1.3 导入自己的router.js路由模块
