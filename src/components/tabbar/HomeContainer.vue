@@ -7,13 +7,10 @@
         <mt-swipe-item>2</mt-swipe-item>
         <mt-swipe-item>3</mt-swipe-item>
     </mt-swipe>
+
     <!-- 轮播图区域 使用请求真实数据时的版本 -->
-    <!-- <mt-swipe :auto="4000">  -->
-      <!-- 在组件中，使用v-for循环的话，一定要使用key -->
-      <!-- <mt-swipe-item v-for="item in lunbotuList" :key="item.url"> -->
-        <!-- <img :src="item.img" alt> -->
-      <!-- </mt-swipe-item> -->
-    <!-- </mt-swipe> -->
+    <!-- 这里已经将轮播图抽离为一个子组件了 -->
+    <!-- <swiper :lunbotuList="lunbotuList"></swiper> -->
     
 
     <!-- 九宫格到六宫格的改造工程 -->
@@ -63,6 +60,8 @@
 <script>
 // 导入mint-ui的提示框组件
 import { Toast } from "mint-ui";
+// 导入轮播图子组件
+import swiper from '../subcomponents/swiper.vue';
 
 export default {
   data() {
@@ -89,17 +88,22 @@ export default {
       //     }
       // });
     }
+  },
+  components: {
+    swiper
   }
 };
 </script>
 
 
 <style lang="scss" scoped>
-// 轮播图样式
+// 轮播图区域使用静态页面时的样式（真实数据时，抽离到 swiper 组件中）
 .mint-swipe {
   height: 200px;
 
   .mint-swipe-item {
+    // text-align: center; // 使轮播图的图片居中（真实数据时）
+
     &:nth-child(1) {
       background-color: green;
     }
@@ -112,9 +116,15 @@ export default {
   }
 
   img {
+    // width: 100%;   // 不需要（真实数据时）
     width: 100%;
     height: 100%;
   }
+
+  // （真实数据时）
+  // .full{  
+  //     width: 100%;
+  // }
 }
 
 // 六宫格样式
