@@ -6,7 +6,7 @@
 
 <script>
 // 导入评论子组件
-import cmtbox from '../subcommponents/comment.vue';
+import cmtbox from '../subcomponents/comment.vue';
 
 export default {
     components: {
