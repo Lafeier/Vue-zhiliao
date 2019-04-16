@@ -6,6 +6,121 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 
+// 导入vuex并注册
+import Vuex from 'vuex';
+Vue.use(Vuex);
+
+// 每次刚进入网站时，肯定会调用 main.js 在刚调用的时候，先从本地存储中，把购物车的数据读取出来，放到store中
+// 每次进入网站后，一开始就从储存中读取购物车里商品的数据
+var car = JSON.parse(localStorage.getItem('car') || '[]');  // 注意储存的信息是字符串形式的，所以还需要转一下
+
+var store = new Vuex.Store({    // 实例化一个数据仓储对象
+    state: {    // this.$store.state.xxx
+        // 将购物车中的商品数据，用一个数组储存起来，在 car 数组中，储存一些商品的对象，我们可以暂时将这个对象设计成这个样子
+        // { id:商品的id, count:商品的数量, price:商品的单价, selected:true }
+        car: []
+    },
+    mutations: {    // this.$store.commit('方法的名称', '按需传递唯一的参数')
+        addToCar(state, goodsinfo){
+            // 点击加入购物车按钮，就把商品信息，保存到 store 中的 state 里的 car 上
+            // 分析：
+            // 1.如果购物车中，之前就已经有这个对应的商品了，那么只需要更新数量即可
+            // 2.如果没有，则直接把 商品数据，push 到 car 中即可
+
+            // 假设 在购物车中，没有找到对应的商品
+            var flag = false;
+
+            state.car.some(item => {
+                if (item.id == goodsinfo.id) {
+                    item.count += parseInt(goodsinfo.count);    // 从客户端传过来的goodsinfo可能是一个字符串，所以要取整一下
+                    flag = true;    // 如果购物车有该件商品了，把 flag 设置为 true
+                    return true;
+                }
+            });
+
+            if (!flag) {    // 如果经过上面的循环，flag还是false，说明购物车没有这件商品
+                state.car.push(goodsinfo);  // 这时就可以把传递过来的 商品信息对象 直接添加到数组中
+            }
+
+            // 当更新 car 之后，把 car 数组，储存到本地的 localStorage 中
+            localStorage.setItem('car', JSON.stringify(state.car));
+        },
+        updateGoodsInfo(state, goodsinfo){
+            // 修改购物车中商品的数量
+            // 分析：
+            state.car.some(item => {
+                if (item.id == goodsinfo.id) {
+                    item.count == parseInt(goodsinfo.count);
+                }
+                return true;
+            });
+
+            // 当修改完商品的数量，把最新的购物车数据，保存到本地存储中
+            localStorage.setItem('car', JSON.stringify(state.car));
+        },
+        removeFormCar(state, id){
+            // 根据id，从store中的购物车中删除对应的那条商品数据
+            state.car.some((item, i) => {
+                if (item.id == id) {
+                    state.car.splice(i, 1);
+                    return true;
+                }
+            });
+
+            // 将删除完毕后的，最新购物车数据，同步到到本地存储中
+            localStorage.setItem('car', JSON.stringify(state.car));
+        },
+        updateGoodsSelected(state, info){
+            state.car.some(item => {
+                if (item.id == info.id) {
+                    item.selected = info.selected;
+                }
+            });
+
+            // 把购物车中所有商品的最新状态保存 store 中
+            localStorage.setItem('car', JSON.stringify(state.car));
+        }
+    },
+    getters: {  // this.$store.getters.xxx
+        // getters相当于 计算属性，也相当于 filters
+        getAllCount(state){   // 定义一个函数用来显示购物车中商品的数量
+            var c = 0;
+            state.car.forEach(item => {
+                c += item.count;
+            });
+            return c;
+        },
+        getGoodsCount(state){   // 定义一个函数用来循环购物车中所有商品数据，从里面找出id和count值组成一个对象
+            var o = {};
+            state.car.forEach(item =>{
+                o[item.id] = item.count
+            });
+            return o;
+        },
+        getGoodsSelected(state){   // 定义一个函数用来获取购物车中每件商品对应的开关状态
+            var o ={};
+            state.car.forEach(item => {
+                o[item.id] = item.selected;
+            });
+            return o;
+        },
+        getGoodsCountAndAmount(state){  // 定义一个函数用来显示被勾选的商品数量和计算总价
+            var o = {
+                count: 0,    // 勾选的数量
+                amount: 0   // 勾选的总价
+            }
+            state.car.forEach(item => {
+                if (item.selected) {
+                    o.count += 1;
+                    o.amount += item.price * item.count;
+                }
+            });
+            return o;
+        }
+    }
+});
+
+
 // 导入格式化时间的插件
 import moment from 'moment';
 // 定义全局过滤器
@@ -62,7 +177,8 @@ import app from './App.vue';
 var vm = new Vue({
     el: '#app',
     render: c => c(app),
-    router  // 1.4 挂载路由到 vm 实例上
+    router,  // 1.4 挂载路由到 vm 实例上
+    store   // 将store挂载到 vm 实例上
 });
 
 
